@@ -9,18 +9,29 @@ async function cevir() {
 
     const url = "https://libretranslate.de/translate";
 
-    const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            q: metin,
-            source: "auto",
-            target: hedef,
-            format: "text"
-        })
-    });
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                q: metin,
+                source: "auto",   // Kaynak dili otomatik algılar
+                target: hedef,
+                format: "text"
+            })
+        });
 
-    const data = await response.json();
+        if (!response.ok) throw new Error("API isteği başarısız: " + response.status);
+
+        const data = await response.json();
+        document.getElementById("sonuc").textContent = data.translatedText;
+
+    } catch (err) {
+        console.error(err);
+        document.getElementById("sonuc").textContent = "Çeviri sırasında bir hata oluştu. Konsolu kontrol et.";
+    }
+}
+n();
 
     document.getElementById("sonuc").textContent = data.translatedText;
 }
