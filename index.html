@@ -34,41 +34,44 @@ async function translateText() {
     const target = document.getElementById("targetLang").value;
 
     if (!text) {
-        alert("Lütfen çevirmek için bir metin yaz!");
+        alert("Lütfen çevirmek için bir metin yazın!");
         return;
     }
 
-   try {
-    // 1. *Gerçek* API anahtarınızı buraya tırnaklar içine yazın.
-    const API_KEY = "https://libretranslate.de/translate"; 
+    // 1. API Anahtarı satırını tamamen SİLİYORUZ (Artık gerek yok)
+    // const API_KEY = "..."; 
 
-    // 2. Anahtarı URL'ye sorgu parametresi olarak ekleyerek fetch isteğini yapın.
-    const response = await fetch(https://libretranslate.com/translate?api_key=${API_KEY}, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            // "Authorization" satırı artık gerekli DEĞİL ve kaldırıldı.
-        },
-        body: JSON.stringify({
-            q: text,
-            source: "auto",
-            target: target
-        })
-    });
+    try {
+        // 2. URL'yi anahtar GEREKTİRMEYEN bir adrese güncelliyoruz.
+        // DİKKAT: Bu URL'nin sürekli çalışacağı garanti edilmez, sadece deneme amaçlıdır.
+        const response = await fetch("https://translate.terraprint.co/translate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                q: text,
+                source: "auto",
+                target: target
+            })
+        });
 
-    // Geri kalan kısım aynı:
-  const data = await response.json();
+        const data = await response.json();
+        
+        console.log("API'den Gelen Yanıt (Anahtarsız):", data); 
 
-console.log("API'den Gelen Yanıt:", data); // YANITI GÖRMEK İÇİN BU SATIRI EKLEYİN!
-
-if (response.ok && data.translatedText) {
-    document.getElementById("translatedText").textContent = data.translatedText;
-} else if (data.error) {
-    alert(Çeviri Hatası: ${data.error});
-} else {
-    // Yanıt formatı beklenenden farklıysa, tüm yanıtı göstermek faydalı olur.
-    alert("Beklenmedik API yanıtı. Konsolu kontrol edin.");
-}
+        // 3. Yanıt kontrolü:
+        if (response.ok && data.translatedText) {
+            document.getElementById("translatedText").textContent = data.translatedText;
+        } else if (data.error) {
+            alert(Çeviri hatası (API): ${data.error});
+        } else {
+             alert("Çeviri başarısız oldu. Konsolu kontrol edin.");
+        }
+    } catch (error) {
+        console.error("Fetch veya Ağ Hatası:", error);
+        alert("API'ye bağlanırken bir sorun oluştu.");
+    }
 }
 </script>
 
