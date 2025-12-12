@@ -57,17 +57,17 @@ async function translateText() {
     });
 
     // Geri kalan kısım aynı:
-    const data = await response.json();
-    // API'nin başarılı yanıt verip vermediğini kontrol etmek iyi bir pratik olabilir.
-    if (response.ok && data.translatedText) {
-        document.getElementById("translatedText").textContent = data.translatedText;
-    } else {
-        // API'den hata kodu gelirse burası çalışır.
-        alert(Çeviri hatası: ${data.error || 'Bilinmeyen bir hata oluştu.'});
-    }
-} catch (error) {
-    console.error("Fetch sırasında hata oluştu:", error);
-    alert("API'ye bağlanırken bir sorun oluştu. Konsolu kontrol edin.");
+  const data = await response.json();
+
+console.log("API'den Gelen Yanıt:", data); // YANITI GÖRMEK İÇİN BU SATIRI EKLEYİN!
+
+if (response.ok && data.translatedText) {
+    document.getElementById("translatedText").textContent = data.translatedText;
+} else if (data.error) {
+    alert(Çeviri Hatası: ${data.error});
+} else {
+    // Yanıt formatı beklenenden farklıysa, tüm yanıtı göstermek faydalı olur.
+    alert("Beklenmedik API yanıtı. Konsolu kontrol edin.");
 }
 }
 </script>
